@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Offline</title>
+		<meta charset="utf-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+		
+		<style>
+			
+			body {
+				position: relative;
+				margin: 0;
+			}
+			
+			canvas {
+				border: 1px solid #333;
+				position: absolute;
+				top:0;
+				left:0;
+				right: 0;
+				bottom: 0;
+				box-sizing: border-box;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="crt"></canvas>
+		<script>
+			
+			var canvas = document.getElementById('crt');
+		
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.canvas.width  = 640;//window.innerWidth;
+				ctx.canvas.height = 480;//window.innerHeight;
+				ctx.font = '48px sans-serif';
+				ctx.textAlign = 'center';
+
+				var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				
+/*
+				    ctx.fillRect(25, 25, 100, 100);
+				    ctx.clearRect(45, 45, 60, 60);
+				    ctx.strokeRect(50, 50, 50, 50);
+*/
+
+				// drawing code here
+			} else {
+				// canvas-unsupported code here
+				console.err("no canvas support")
+			}
+			
+			function update() {
+				
+				static();
+				text();
+				window.requestAnimationFrame(update);
+				
+			}
+			
+			function text() {
+				ctx.fillText('OFFLINE', canvas.width/2, canvas.height/2);
+			}
+			
+			function static() {
+				
+				var rand;
+				
+				for (var i = 0; i < imageData.data.length; i += 4) {
+					rand = getRandomIntInclusive(0,255);
+					imageData.data[i]     = rand; // red
+					imageData.data[i + 1] = rand; // green
+					imageData.data[i + 2] = rand; // blue
+					imageData.data[i + 3] = 255;  // alpha
+				}
+				ctx.putImageData(imageData, 0, 0);
+			};
+			
+			function getRandomIntInclusive(min, max) {
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+			}
+
+			window.requestAnimationFrame(update);
+
+		</script>
+	</body>
+</html>
